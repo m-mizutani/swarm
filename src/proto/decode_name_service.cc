@@ -32,6 +32,9 @@ namespace swarm {
   std::string NameServiceDecoder::VarNameServiceData::repr() const {
     std::string s;
 
+    size_t r_len;
+    byte_t * r_ptr = this->ptr(&r_len);
+
     bool rc = false;
     switch (this->type_) {
     case  1: s = this->ip4(); break;  // A
@@ -53,11 +56,45 @@ namespace swarm {
       }
       break;
 
+    case 16: // TXT
+      {
+        std::stringstream ss;
+        size_t len, d_len;
+        byte_t * start_ptr = this->ptr(&len);
+        debug(0, "len = %zd", len);
+        for (byte_t *p = start_ptr; p - start_ptr < len; p += d_len) {
+          if (p > start_ptr) {
+            ss << ",";
+          }
+          d_len = *p;
+          p += 1;          
+          debug(0, "d_len = %d, p - s (%d)", d_len, p - start_ptr);
+
+          if (p - start_ptr + d_len > len) {
+            break;
+          }
+          ss << std::string(reinterpret_cast<char *>(p), d_len);
+        }
+        s = ss.str();
+      }
+      break;
+
+    case 32: // NB
+      {
+        
+      }
+      break;
+
     default:
       {
         std::stringstream ss;
-        debug (1, "? %d", this->type_);
-        ss << this->type_;
+        size_t len;
+        byte_t *p, *start_ptr = this->ptr(&len);
+        debug (0, "unsupported name service type: %d", this->type_);
+        for(p = start_ptr; p - start_ptr < len; p++) {
+          char c = static_cast<char>(*p);
+          ss << (isprint(c) ? c : '.');
+        }
         s = ss.str();
       }
     }
@@ -339,6 +376,7 @@ namespace swarm {
     case  6: s.assign ("SOA"); break;
     case 12: s.assign ("PTR"); break;
     case 15: s.assign ("MX"); break;
+    case 16: s.assign ("TXT"); break;
     case 28: s.assign ("AAAA"); break;
     default:
       {
@@ -349,6 +387,7 @@ namespace swarm {
       break;
     }
 
+    debug(0, "type = %u, %s", type, s.c_str());
     return s;
   }
 
