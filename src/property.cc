@@ -94,6 +94,11 @@ namespace swarm {
     this->hash_value_ = 0;
     this->hashed_ = false;
     this->dir_ = DIR_NIL;
+
+    this->src_port_ = NULL;
+    this->dst_port_ = NULL;
+    this->src_addr_ = NULL;
+    this->dst_addr_ = NULL;
   }
   const Value& Property::value(const std::string &key, size_t idx) const {
     const val_id vid = this->nd_->lookup_value_id (key);
