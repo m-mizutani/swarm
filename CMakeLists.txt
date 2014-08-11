@@ -23,6 +23,7 @@ LINK_DIRECTORIES(${LIB_DIR})
 
 FILE(GLOB BASESRCS "src/*.cc" "src/proto/*.cc" "src/utils/*.cc")
 FILE(GLOB TESTSRCS "test/*.cc")
+FILE(GLOB HEADERS "src/swarm/*.h")
 
 ADD_LIBRARY(swarm SHARED ${BASESRCS})
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -32,12 +33,8 @@ ELSE(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 INSTALL(TARGETS swarm LIBRARY DESTINATION lib)
-INSTALL(FILES src/swarm.h src/common.h src/timer.h src/netcap.h src/netdec.h src/decode.h src/value.h DESTINATION include/swarm)
-
-
-
-INSTALL(FILES DESTINATION include/swarm)
-INSTALL(FILES src/property.h DESTINATION include/swarm)
+INSTALL(FILES src/swarm.h DESTINATION include/)
+INSTALL(FILES ${HEADERS} DESTINATION include/swarm)
 
 
 

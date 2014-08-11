@@ -25,7 +25,7 @@
  */
 
 
-#include "../decode.h"
+#include "../swarm/decode.h"
 
 #ifndef ETHERTYPE_ARP
 #define ETHERTYPE_ARP 0x0806

@@ -28,7 +28,7 @@
 #include <sys/time.h>
 #include <math.h>
 
-#include "./timer.h"
+#include "./swarm/timer.h"
 #include "./debug.h"
 
 namespace swarm {

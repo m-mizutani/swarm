@@ -32,8 +32,8 @@
 
 #include "./swarm.h"
 #include "./debug.h"
-#include "./netdec.h"
-#include "./netcap.h"
+#include "./swarm/netdec.h"
+#include "./swarm/netcap.h"
 
 namespace swarm {
   Swarm::Swarm() {

@@ -25,7 +25,7 @@
  */
 
 #include <sstream>
-#include "../decode.h"
+#include "../swarm/decode.h"
 #include "../utils/lru-hash.h"
 #include "../debug.h"
 

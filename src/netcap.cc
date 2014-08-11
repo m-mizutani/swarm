@@ -38,10 +38,11 @@
 #include <ev.h>
 #include <math.h>
 #include <string>
-#include "./netcap.h"
-#include "./netdec.h"
+
 #include "./debug.h"
-#include "./timer.h"
+#include "./swarm/netcap.h"
+#include "./swarm/netdec.h"
+#include "./swarm/timer.h"
 
 
 namespace swarm {

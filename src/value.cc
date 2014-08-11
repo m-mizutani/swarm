@@ -29,7 +29,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include "./value.h"
+#include "./swarm/value.h"
 #include "./debug.h"
 
 namespace swarm {

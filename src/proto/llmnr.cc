@@ -25,7 +25,6 @@
  */
 
 
-#include "../decode.h"
 #include "./decode_name_service.h"
 
 namespace swarm {

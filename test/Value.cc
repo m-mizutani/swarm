@@ -26,7 +26,7 @@
 
 #include "./gtest.h"
 #include "../src/swarm.h"
-#include "../src/value.h"
+#include "../src/swarm/value.h"
 
 TEST (ValueSet, retain) {
   swarm::ValueSet *vs = new swarm::ValueSet ();

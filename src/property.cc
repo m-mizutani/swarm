@@ -29,9 +29,9 @@
 #include <string.h>
 #include <assert.h>
 
-#include "./property.h"
-#include "./value.h"
-#include "./netdec.h"
+#include "./swarm/property.h"
+#include "./swarm/value.h"
+#include "./swarm/netdec.h"
 #include "./debug.h"
 
 namespace swarm {

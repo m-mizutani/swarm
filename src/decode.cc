@@ -24,8 +24,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "./netdec.h"
-#include "./decode.h"
+#include "./swarm/netdec.h"
+#include "./swarm/decode.h"
 
 namespace swarm {
   std::map <std::string, Decoder * (*)(NetDec *nd)>

@@ -26,10 +26,11 @@
 
 #include <string.h>
 #include <sys/time.h>
-#include "./netdec.h"
-#include "./property.h"
-#include "./decode.h"
-#include "./timer.h"
+
+#include "./swarm/netdec.h"
+#include "./swarm/property.h"
+#include "./swarm/decode.h"
+#include "./swarm/timer.h"
 #include "./debug.h"
 
 namespace swarm {
