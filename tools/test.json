@@ -1,8 +1,0 @@
-[
-  {"build_command": "./bin/swarm-test",
-   "build_args":  [],
-   "file_list": {"bin": ["swarm-test"]},
-   "enable": 1
-  }
-]
- 
