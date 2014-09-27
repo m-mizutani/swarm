@@ -43,6 +43,8 @@ TARGET_LINK_LIBRARIES(swarm-test swarm)
 
 ADD_EXECUTABLE(swarm-bench apps/swarm-bench.cc apps/optparse.cc)
 TARGET_LINK_LIBRARIES(swarm-bench swarm)
+ADD_EXECUTABLE(swarm-dump apps/swarm-dump.cc apps/optparse.cc)
+TARGET_LINK_LIBRARIES(swarm-dump swarm)
 ADD_EXECUTABLE(swarm-tool apps/swarm-tool.cc apps/optparse.cc)
 TARGET_LINK_LIBRARIES(swarm-tool swarm)
 
