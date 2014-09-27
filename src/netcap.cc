@@ -39,6 +39,19 @@
 #include <math.h>
 #include <string>
 
+#ifdef __linux__
+// linux
+#include <arpa/inet.h>
+#include <linux/if_packet.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <net/if.h>
+#include <netinet/ether.h>
+#endif  // __linux__
+
 #include "./debug.h"
 #include "./swarm/netcap.h"
 #include "./swarm/netdec.h"
@@ -74,7 +87,9 @@ namespace swarm {
     if (timeout > 0.) {
       ev_timer_start(this->ev_loop_, &(this->timeout_));
     }
+
     ::ev_run(this->ev_loop_, 0);
+
 
     if (!this->teardown()) {
       return false;
@@ -91,20 +106,24 @@ namespace swarm {
 
   void NetCap::handle_io_event(EV_P_ struct ev_io *w, int revents) {
     NetCap *nc = reinterpret_cast<NetCap*>(w->data);
+    debug(false,  "IO_event: %d", revents);
     nc->handler(revents);
   }
 
   void NetCap::handle_timeout(EV_P_ struct ev_timer *w, int revents) {
     NetCap *nc = reinterpret_cast<NetCap*>(w->data);
+    debug(false,  "timeout: %d", revents);
     nc->ev_loop_exit();
   }
 
   void NetCap::ev_watch_fd(int fd) {
+    debug(false,  "watching: %d", fd);
     ev_io_init(&(this->watcher_), NetCap::handle_io_event, fd, EV_READ);
     this->watcher_.data = this;
     ev_io_start(this->ev_loop_, &(this->watcher_));
   }
   void NetCap::ev_loop_exit() {
+    debug(false,  "exit");
     // ev_io_stop (EV_A_ w);
     // ev_unloop (this->ev_loop_, EVUNLOOP_ALL);
     ::ev_break(this->ev_loop_, EVBREAK_ALL);
@@ -368,7 +387,9 @@ namespace swarm {
     struct pcap_pkthdr *pkthdr;
     const u_char *pkt_data;
     int rc;
-    for(int i = 0; i < 64; i++) {
+    // debug(true, "event: %d", revents);
+    for(int i = 0; i < 12; i++) {
+      pkt_data = NULL;
       rc = ::pcap_next_ex (this->pcap_, &pkthdr, &pkt_data);
 
       if (rc == 1 && this->netdec()) {
@@ -389,20 +410,123 @@ namespace swarm {
   //
   CapPcapDev::CapPcapDev (const std::string &dev_name) :
     dev_name_(dev_name) {
+    this->set_status (NetCap::FAIL);
+    
+#ifdef __linux__
+    this->sock_fd_ = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+    if (this->sock_fd_ < 0) {
+      this->set_errmsg (strerror(errno));
+      return;
+    }
+
+    struct ifreq if_idx, if_mac, if_prom;
+    memset(&if_idx, 0, sizeof(struct ifreq));
+    memset(&if_mac, 0, sizeof(struct ifreq));
+    strncpy(if_idx.ifr_name, this->dev_name_.c_str(), IFNAMSIZ-1);
+    strncpy(if_mac.ifr_name, this->dev_name_.c_str(), IFNAMSIZ-1);
+
+    // Bind interface.
+    if (ioctl(this->sock_fd_, SIOCGIFINDEX, &if_idx) < 0) {
+      this->set_errmsg(strerror(errno));
+      return;
+    }
+
+    // Set promiscous mode.
+    memset(&if_prom, 0, sizeof(if_prom));
+    strncpy(if_prom. ifr_name, this->dev_name_.c_str(), IFNAMSIZ-1);
+    ioctl(this->sock_fd_, SIOCGIFFLAGS, &if_prom);
+    if_prom.ifr_flags|=IFF_PROMISC;
+    ioctl(this->sock_fd_, SIOCSIFFLAGS, &if_prom);
+
+    // Set non-blocking mode.
+    int val = 1;
+    ioctl(this->sock_fd_, FIONBIO, &val);
+
+    struct sockaddr_ll sa;
+    memset(&sa, 0, sizeof(sa));
+    sa.sll_family   = AF_PACKET;
+    sa.sll_protocol = htons(ETH_P_ALL);
+    sa.sll_ifindex  = if_idx.ifr_ifindex;
+    if(bind(this->sock_fd_, (struct sockaddr *)&sa, sizeof(sa)) < 0){
+      this->set_errmsg(strerror(errno));
+      return;
+    }
+    
+#else  // __linux__    
     char errbuf[PCAP_ERRBUF_SIZE];
 
     this->pcap_ = pcap_open_live (this->dev_name_.c_str (), PCAP_BUFSIZE_,
-                                  1, PCAP_TIMEOUT_, errbuf);
+                                  PCAP_PROMISC_, 10, errbuf);
     // open interface
     if (NULL == this->pcap_) {
       this->set_errmsg (errbuf);
       this->set_status (NetCap::FAIL);
-    } else {
-      this->set_status (NetCap::READY);
     }
+
+#endif  // __linux__
+
+    this->set_status (NetCap::READY);
   }
   CapPcapDev::~CapPcapDev () {
   }
+
+
+
+#ifdef __linux__
+
+  bool CapPcapDev::setup() {
+    // delegate pcap descriptor
+    static const std::string dec = "ether";
+
+    if (this->netdec() && !this->netdec()->set_default_decoder(dec)) {
+      this->set_errmsg(this->netdec()->errmsg());
+      this->set_status(FAIL);
+      return false;
+    }
+
+    this->buffer_ = new u_char[BUFSIZE_];
+
+    for(;;) {
+      // Flush socket buffer.
+      fd_set fds;
+      struct timeval t;
+      FD_ZERO(&fds);  
+      FD_SET(this->sock_fd_, &fds);
+      memset(&t, 0, sizeof(t));
+      int rc = select(FD_SETSIZE, &fds, NULL, NULL, &t);
+      if (rc > 0) {
+        recv(this->sock_fd_, this->buffer_, BUFSIZE_, 0);
+      } else {
+        break;
+      }
+    }
+
+    // ----------------------------------------------
+    // processing packets from pcap file
+    this->ev_watch_fd(this->sock_fd_);
+    return true;
+  }
+  bool CapPcapDev::teardown() {
+    ::close(this->sock_fd_);
+    delete this->buffer_;
+    return true;
+  }
+  void CapPcapDev::handler(int revents) {
+    int rc;
+
+    struct timeval tv;
+
+    for(int i = 0; i < 16; i++) {
+      rc = ::recv(this->sock_fd_, this->buffer_, BUFSIZE_, 0);
+      if (rc > 0) {
+        gettimeofday(&tv, NULL);
+        this->netdec()->input (this->buffer_, rc, tv);
+      } else {
+        return;
+      }
+    }
+  }
+#endif  // __linux__
 
   bool CapPcapDev::retrieve_device_list(std::vector<std::string> *name_list,
                                         std::string *errmsg) {

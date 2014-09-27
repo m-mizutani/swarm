@@ -45,8 +45,6 @@ int main (int argc, char *argv[]) {
 
   psr.add_option("-r").dest("read_file")
     .help("Specify read pcap format file(s)");
-  psr.add_option("-m").dest("pcap_mmap")
-    .help("Specify read pcap format file(s) by mmap based reader");
   psr.add_option("-i").dest("interface")
     .help("Specify interface to monitor on the fly");
 

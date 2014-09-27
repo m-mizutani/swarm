@@ -95,6 +95,10 @@ namespace swarm {
     this->netcap_->start();
   }
 
+  const std::string& Swarm::errmsg() const {
+    return this->netcap_->errmsg();
+  }
+
   Task::Task () {
   }
   Task::~Task () {

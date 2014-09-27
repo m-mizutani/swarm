@@ -148,7 +148,8 @@ namespace swarm {
     pcap_t *pcap_;
     std::string filter_;
     static const size_t PCAP_BUFSIZE_ = 0xffff;
-    static const size_t PCAP_TIMEOUT_ = 1;
+    static const size_t PCAP_TIMEOUT_ = 1000;
+    static const int    PCAP_PROMISC_ = 1;
 
     bool setup();
     bool teardown();
@@ -169,6 +170,16 @@ namespace swarm {
   class CapPcapDev : public PcapBase {
   private:
     std::string dev_name_;
+
+#ifdef __linux__
+    // If Linux, PF_PACKET socket instead of pcap interface.
+    int sock_fd_;
+    u_char *buffer_;
+    static const size_t BUFSIZE_ = 0xffff;
+    bool setup();
+    bool teardown();
+    void handler(int revents);
+#endif
 
   public:
     explicit CapPcapDev (const std::string &dev_name);

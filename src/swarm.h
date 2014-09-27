@@ -68,6 +68,7 @@ namespace swarm {
 
     bool ready() const;
     void start();
+    const std::string& errmsg() const;
   };
 
   class SwarmDev : public Swarm {
