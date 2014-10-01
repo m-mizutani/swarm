@@ -114,7 +114,7 @@ namespace swarm {
       p->calc_hash();
 
       // TCP Header Option handling
-      size_t opthdr_len = (hdr->offset_ >> 2) - sizeof(struct tcp_header);
+      size_t opthdr_len = (hdr->offset_ << 2) - sizeof(struct tcp_header);
       assert(opthdr_len < 0xfff);
       if (opthdr_len > 0) {
         byte_t *opt = p->payload(opthdr_len);
