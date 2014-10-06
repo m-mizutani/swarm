@@ -58,6 +58,9 @@ namespace swarm {
   hdlr_id Swarm::set_handler(const std::string &ev_name, Handler *hdlr) {
     return this->netdec_->set_handler(ev_name, hdlr);
   }
+  hdlr_id Swarm::set_handler(const ev_id eid, Handler *hdlr) {
+    return this->netdec_->set_handler(eid, hdlr);
+  }
   bool Swarm::unset_handler(hdlr_id h_id) {
     return this->netdec_->unset_handler(h_id);
   }

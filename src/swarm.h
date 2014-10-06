@@ -58,6 +58,7 @@ namespace swarm {
     Swarm();
     ~Swarm();
     hdlr_id set_handler(const std::string &ev_name, Handler *hdlr);
+    hdlr_id set_handler(const ev_id eid, Handler *hdlr);
     bool unset_handler(hdlr_id h_id);
 
     task_id set_periodic_task(Task *task, float interval);
