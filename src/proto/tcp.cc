@@ -25,6 +25,7 @@
  */
 
 #include <sstream>
+#include "./debug.h"
 #include "../swarm/decode.h"
 
 
@@ -114,11 +115,19 @@ namespace swarm {
       p->calc_hash();
 
       // TCP Header Option handling
-      size_t opthdr_len = (hdr->offset_ << 2) - sizeof(struct tcp_header);
+      size_t hdr_len = ((hdr->offset_ & 0xf0) >> 2);
+      if (hdr_len < sizeof(struct tcp_header)) {
+        return false;
+      }
+
+      size_t opthdr_len = hdr_len - sizeof(struct tcp_header);
+      // debug(true, "hdr:%zd, opt:%zd", hdr_len, opthdr_len);
       assert(opthdr_len < 0xfff);
+
       if (opthdr_len > 0) {
         byte_t *opt = p->payload(opthdr_len);
         if (!opt) {
+          // debug(true, "invalid option length");
           return false;
         }
         size_t optlen = 0;
@@ -131,8 +140,7 @@ namespace swarm {
           if (op + 2 >= opt + opthdr_len) {
             break;
           }
-          // debug(1, "kind: %zd", op[0]);
-          // debug(1, "len : %zd", op[1]);
+          // debug(1, "kind:%zd, len:%zd", op[0], op[1]);
           optlen = op[1];
 
           if (optlen == 0) {
