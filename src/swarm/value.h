@@ -62,6 +62,7 @@ namespace swarm {
     std::string ip4() const;
     std::string ip6() const;
     std::string mac() const;
+    std::string prt() const;
 
     template <typename T> T ntoh () const {
       if (this->len_ >= sizeof (T)) {

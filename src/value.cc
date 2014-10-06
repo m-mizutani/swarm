@@ -180,6 +180,14 @@ namespace swarm {
       return Value::null_;
     }
   }
+  std::string Value::prt() const {
+    char *buf = new char[this->len_];
+    for(size_t i = 0; i < this->len_; i++) {
+      buf[i] = (isprint(this->ptr_[i]) > 0) ? this->ptr_[i] : '.';
+    }
+    std::string tmp(buf, this->len_);
+    return tmp;
+  }
 
   uint32_t Value::uint32() const {
     return this->ntoh <uint32_t> ();
