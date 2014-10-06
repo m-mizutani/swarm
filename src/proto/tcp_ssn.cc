@@ -375,7 +375,7 @@ namespace swarm {
 
   class TcpSsnDecoder : public Decoder {
   private:
-    ev_id EV_EST_;
+    ev_id EV_EST_, EV_DATA_;
     val_id P_SEG_, P_TO_SERVER_;
     val_id P_TCP_HDR_, P_TCP_SEQ_, P_TCP_ACK_, P_TCP_FLAGS_;
     LRUHash *ssn_table_;
@@ -386,6 +386,9 @@ namespace swarm {
     explicit TcpSsnDecoder (NetDec * nd) : Decoder (nd), last_ts_(0) {
       this->EV_EST_ = nd->assign_event ("tcp_ssn.established",
                                         "TCP session established");
+      this->EV_DATA_ = nd->assign_event ("tcp_ssn.data", 
+                                         "TCP session segment data");
+                                        
       this->P_SEG_ = nd->assign_value ("tcp_ssn.segment", "TCP segment data");
       this->P_TO_SERVER_ = 
         nd->assign_value ("tcp_ssn.to_server", "Packet to server");
@@ -479,6 +482,7 @@ namespace swarm {
               debug(DBG, "seg_data: %zd", data_len);
             }
             p->set(this->P_SEG_, data, data_len);
+            p->push_event (this->EV_DATA_);
           }
         }
       }
