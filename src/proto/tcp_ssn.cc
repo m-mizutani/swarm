@@ -366,6 +366,8 @@ namespace swarm {
           // Valid sequence & ack number
           sender->send(f, seq, ack, data_len);
           recver->recv(f, seq, ack, data_len);
+        } else {
+          rc = false;
         }
       }
 
