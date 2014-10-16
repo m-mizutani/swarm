@@ -74,18 +74,18 @@ namespace swarm {
     return this->netcap_->unset_task(t_id);
   }
 
-  ev_id Swarm::lookup_event_id(const std::string &ev_name) {
+  ev_id Swarm::lookup_event_id(const std::string &ev_name) const {
     if (this->netdec_) {
       return this->netdec_->lookup_event_id(ev_name);
     } else {
       return EV_NULL;
     }
   }
-  val_id Swarm::lookup_value_id(const std::string &val_name) {
+  val_id Swarm::lookup_value_id(const std::string &val_name) const {
     if (this->netdec_) {
       return this->netdec_->lookup_value_id(val_name);
     } else {
-      return EV_NULL;
+      return VALUE_NULL;
     }
   }
 
