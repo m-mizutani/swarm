@@ -140,6 +140,7 @@ namespace swarm {
     // Assign parameter name
     this->P_ID_  = nd->assign_value(bn + ".tx_id", bn + " Transaction ID",
                                     new FacNum ());
+    this->P_QUERY_ = nd->assign_value(bn + ".query", bn + " Query Flag");
 
     for (size_t i = 0; i < RR_CNT; i++) {
       std::string base, desc;
@@ -211,6 +212,8 @@ namespace swarm {
     const byte_t * ep = base_ptr + hdr_len + total_len;
 
     p->set (this->P_ID_, &(hdr->trans_id_), sizeof (hdr->trans_id_));
+    u_int32_t query = htonl(((hdr->flags_ & NS_FLAG_MASK_QUERY) > 0) ? 1 : 0);
+    p->copy (this->P_QUERY_, &(query), sizeof(query));
 
     // parsing resource record
     int target = 0, rr_c = 0;

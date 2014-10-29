@@ -54,6 +54,7 @@ namespace swarm {
     } __attribute__((packed));
 
     static const bool DEBUG = false;
+    static const u_int16_t NS_FLAG_MASK_QUERY = 0x8000;
     static const u_int16_t RR_QD  = 0;
     static const u_int16_t RR_AN  = 1;
     static const u_int16_t RR_NS  = 2;
@@ -73,6 +74,7 @@ namespace swarm {
     const std::string base_name_;
     ev_id EV_NS_PKT_, EV_TYPE_[4];
     val_id P_ID_;
+    val_id P_QUERY_;
     val_id NS_NAME[4];
     val_id NS_TYPE[4];
     val_id NS_DATA[4];
