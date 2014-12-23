@@ -9,9 +9,10 @@ Features
 - Extracting parameters of network protocol ([example](./example/extract_data.cc))
 - Extendable protocol decoding module ([example](./example/original_decoder.cc))
 
-Required libraries
+Required compiler & libraries
 ---------------------------
 
+- C++11
 - libpcap
 - pthread
 
