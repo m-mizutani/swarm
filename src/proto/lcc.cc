@@ -62,7 +62,7 @@ namespace swarm {
       auto lcc_hdr = reinterpret_cast <struct lcc_header *>
         (p->payload (sizeof (struct lcc_header)));
 
-      if (lcc_hdr == NULL) {
+      if (lcc_hdr == nullptr) {
         return false;
       }
 

@@ -96,7 +96,7 @@ namespace swarm {
       auto eth_hdr = reinterpret_cast <struct ether_header *>
         (p->payload (sizeof (struct ether_header)));
 
-      if (eth_hdr == NULL) {
+      if (eth_hdr == nullptr) {
         return false;
       }
 

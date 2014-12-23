@@ -66,14 +66,14 @@ namespace swarm {
     if (idx < this->idx_) {
       return this->value_set_[idx];
     } else {
-      return NULL;
+      return nullptr;
     }
   }
 
 
   // -------------------------------------------------------
   // Value
-  Value::Value () : ptr_(NULL), buf_(NULL),  len_(0), buf_len_(0) {
+  Value::Value () : ptr_(nullptr), buf_(nullptr),  len_(0), buf_len_(0) {
   }
   Value::~Value () {
     if (this->buf_) {
@@ -81,7 +81,7 @@ namespace swarm {
     }
   }
   void Value::init () {
-    this->ptr_ = NULL;
+    this->ptr_ = nullptr;
     this->len_ = 0;
   }
   void Value::set (byte_t *ptr, size_t len) {

@@ -54,7 +54,7 @@ namespace swarm {
     void init ();
     void set (byte_t *ptr, size_t len);
     void copy (byte_t *ptr, size_t len);
-    byte_t *ptr (size_t *len=NULL) const;
+    byte_t *ptr (size_t *len=nullptr) const;
     
     virtual std::string repr() const;
     std::string str() const;
@@ -98,7 +98,7 @@ namespace swarm {
     uint32_t uint32() const;
     uint64_t uint64() const;
 
-    virtual bool is_null() const { return (this->ptr_ == NULL); }
+    virtual bool is_null() const { return (this->ptr_ == nullptr); }
     bool operator==(const Value &v) const {
       return (this->len_ == v.len_ && 
               0 == ::memcmp(this->ptr_, v.ptr_, this->len_));
@@ -117,7 +117,7 @@ namespace swarm {
     ~ValueNull() {}
     std::string repr() const { return this->v_; }
     bool is_null() const { return true; }
-    byte_t *ptr (size_t *len=NULL) const { return NULL; }    
+    byte_t *ptr (size_t *len=nullptr) const { return nullptr; }    
   };
 
   // -------------------------------------------------------
@@ -132,7 +132,7 @@ namespace swarm {
   public:
     static const std::string errmsg_;
 
-    explicit ValueSet(ValueFactory *fac = NULL);
+    explicit ValueSet(ValueFactory *fac = nullptr);
     ~ValueSet();
     void init ();
 

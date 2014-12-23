@@ -66,7 +66,7 @@ namespace swarm {
       auto pppoe_hdr = reinterpret_cast <struct pppoe_header *>
         (p->payload (sizeof (struct pppoe_header)));
 
-      if (pppoe_hdr == NULL) {
+      if (pppoe_hdr == nullptr) {
         return false;
       }
 

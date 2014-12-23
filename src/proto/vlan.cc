@@ -85,7 +85,7 @@ namespace swarm {
       auto hdr = reinterpret_cast <struct vlan_header *>
         (p->payload (sizeof (struct vlan_header)));
 
-      if (hdr == NULL) {
+      if (hdr == nullptr) {
         return false;
       }
 

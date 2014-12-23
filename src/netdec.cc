@@ -1,6 +1,6 @@
 /*-
- * Copyright (c) 2013 Masayoshi Mizutani <mizutani@sfc.wide.ad.jp>
- * All rights reserved.
+ * Copyright (c) 2013 Masayoshi Mizutani <mizutani@sfc.wide.ad.jp> All
+ * rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -103,7 +103,7 @@ namespace swarm {
     this->base_did_++;
     if (this->dec_mod_.size() < d_id + 1) {
       this->dec_mod_.resize (d_id + 1);
-      this->dec_mod_[d_id] = NULL;
+      this->dec_mod_[d_id] = nullptr;
       this->dec_bind_.resize (d_id + 1);
     }
 
@@ -122,7 +122,7 @@ namespace swarm {
     auto rit = this->rev_dec_.find (d_id);
     if (rit == this->rev_dec_.end ()) {
       this->errmsg_ = "no avaialable decoder id";
-      return NULL;
+      return nullptr;
     }
     std::string name = rit->second;
     this->rev_dec_.erase (rit);
@@ -133,8 +133,8 @@ namespace swarm {
     
     assert (d_id < this->dec_mod_.size ());
     Decoder * dec = this->dec_mod_[d_id];
-    assert (NULL != dec);
-    this->dec_mod_[d_id] = NULL;
+    assert (nullptr != dec);
+    this->dec_mod_[d_id] = nullptr;
     return dec;
   }
 
@@ -190,7 +190,7 @@ namespace swarm {
       if (hdlr_list) {
         for (auto it = hdlr_list->begin (); it != hdlr_list->end (); it++) {
           Handler * hdlr = (*it)->hdlr ();
-          assert (hdlr != NULL);
+          assert (hdlr != nullptr);
           hdlr->recv (eid, *prop);
         }
       }
@@ -261,7 +261,7 @@ namespace swarm {
     return d_id;
   }
   bool NetDec::unload_decoder (dec_id d_id) {    
-    return (NULL != this->uninstall_dec_mod (d_id));
+    return (nullptr != this->uninstall_dec_mod (d_id));
   }
   bool NetDec::bind_decoder (dec_id d_id, const std::string &tgt_dec_name) {
     auto it = this->fwd_dec_.find (tgt_dec_name);
@@ -331,7 +331,7 @@ namespace swarm {
   Handler * NetDec::unset_handler (hdlr_id entry) {
     auto it = this->rev_hdlr_.find (entry);
     if (it == this->rev_hdlr_.end ()) {
-      return NULL;
+      return nullptr;
     } else {
       HandlerEntry * ent = it->second;
       this->rev_hdlr_.erase (it);

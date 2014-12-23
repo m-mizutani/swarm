@@ -1,6 +1,6 @@
 /*-
- * Copyright (c) 2013 Masayoshi Mizutani <mizutani@sfc.wide.ad.jp>
- * All rights reserved.
+ * Copyright (c) 2013 Masayoshi Mizutani <mizutani@sfc.wide.ad.jp> All
+ * rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -63,7 +63,7 @@ namespace swarm {
   // class NetCap
   //
   NetCap::NetCap () :
-    nd_(NULL), ev_loop_(EV_DEFAULT), last_id_(1) {
+    nd_(nullptr), ev_loop_(EV_DEFAULT), last_id_(1) {
   }
   NetCap::~NetCap () {
   }
@@ -165,7 +165,7 @@ namespace swarm {
   // -------------------------------------------------------------------
   // class CapPcapMmap
   //
-  CapPcapMmap::CapPcapMmap(const std::string &filepath) : fd_(0), addr_(NULL) {
+  CapPcapMmap::CapPcapMmap(const std::string &filepath) : fd_(0), addr_(nullptr) {
     assert(0);  // don't use in libev arch
     this->set_status(FAIL);
 
@@ -188,7 +188,7 @@ namespace swarm {
     }
 
     this->addr_ =
-      ::mmap(NULL, this->length_, PROT_READ, MAP_PRIVATE, this->fd_, 0);
+      ::mmap(nullptr, this->length_, PROT_READ, MAP_PRIVATE, this->fd_, 0);
     if (!this->addr_) {
       this->set_errmsg("mmap error");
       return;
@@ -311,12 +311,12 @@ namespace swarm {
   // -------------------------------------------------------------------
   // class PcapBase
   //
-  PcapBase::PcapBase () : pcap_(NULL) {
+  PcapBase::PcapBase () : pcap_(nullptr) {
   }
   PcapBase::~PcapBase () {
   }
   bool PcapBase::set_filter (const std::string &filter) {
-    if (this->pcap_ == NULL) {
+    if (this->pcap_ == nullptr) {
       this->set_errmsg("Can't apply filter to unavailable device/file");
       return false;
     }
@@ -378,7 +378,7 @@ namespace swarm {
 
   bool PcapBase::teardown() {
     pcap_close (this->pcap_);
-    this->pcap_ = NULL;
+    this->pcap_ = nullptr;
     return true;
   }
 
@@ -389,7 +389,7 @@ namespace swarm {
     int rc;
     // debug(true, "event: %d", revents);
     for(int i = 0; i < 12; i++) {
-      pkt_data = NULL;
+      pkt_data = nullptr;
       rc = ::pcap_next_ex (this->pcap_, &pkthdr, &pkt_data);
 
       if (rc == 1 && this->netdec()) {
@@ -458,7 +458,7 @@ namespace swarm {
     this->pcap_ = pcap_open_live (this->dev_name_.c_str (), PCAP_BUFSIZE_,
                                   PCAP_PROMISC_, 10, errbuf);
     // open interface
-    if (NULL == this->pcap_) {
+    if (nullptr == this->pcap_) {
       this->set_errmsg (errbuf);
       this->set_status (NetCap::FAIL);
     }
@@ -493,7 +493,7 @@ namespace swarm {
       FD_ZERO(&fds);  
       FD_SET(this->sock_fd_, &fds);
       memset(&t, 0, sizeof(t));
-      int rc = select(FD_SETSIZE, &fds, NULL, NULL, &t);
+      int rc = select(FD_SETSIZE, &fds, nullptr, nullptr, &t);
       if (rc > 0) {
         recv(this->sock_fd_, this->buffer_, BUFSIZE_, 0);
       } else {
@@ -519,7 +519,7 @@ namespace swarm {
     for(int i = 0; i < 16; i++) {
       rc = ::recv(this->sock_fd_, this->buffer_, BUFSIZE_, 0);
       if (rc > 0) {
-        gettimeofday(&tv, NULL);
+        gettimeofday(&tv, nullptr);
         this->netdec()->input (this->buffer_, rc, tv);
       } else {
         return;
@@ -554,7 +554,7 @@ namespace swarm {
     char errbuf[PCAP_ERRBUF_SIZE];
 
     this->pcap_ = ::pcap_open_offline(this->file_path_.c_str (), errbuf);
-    if (this->pcap_ == NULL) {
+    if (this->pcap_ == nullptr) {
       this->set_errmsg (errbuf);
       this->set_status (NetCap::FAIL);
     } else {

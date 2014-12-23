@@ -58,7 +58,7 @@ namespace swarm {
       size_t tp = (this->curr_tick_ + i) % this->timeslot_.size();
 
       Node *node;
-      while (NULL != (node = this->timeslot_[tp].pop())) {
+      while (nullptr != (node = this->timeslot_[tp].pop())) {
         node->detach();
         this->exp_node_.push_link(node);
       }
@@ -101,7 +101,7 @@ namespace swarm {
   }
 
   // class LRUHash::Node
-  LRUHash::Node::Node() : next_(NULL), prev_(NULL), link_(NULL), update_(0) {
+  LRUHash::Node::Node() : next_(nullptr), prev_(nullptr), link_(nullptr), update_(0) {
   }
   LRUHash::Node::~Node() {  
   }
@@ -126,7 +126,7 @@ namespace swarm {
     if (prev) {
       prev->next_ = next;
     }
-    this->next_ = this->prev_ = NULL;
+    this->next_ = this->prev_ = nullptr;
   }
   void LRUHash::Node::push_link(Node * node) {
     Node * next = this->link_;
@@ -143,18 +143,18 @@ namespace swarm {
   }  
   LRUHash::Node* LRUHash::Node::pop_all() {
     Node * all = this->link_;
-    this->link_ = NULL;
+    this->link_ = nullptr;
     return all;  
   }
 
   LRUHash::Node* LRUHash::Node::search (uint64_t hv, const void *key,
                                         size_t len) {
-    for (Node *node = this->next_; node != NULL; node = node->next_) {
+    for (Node *node = this->next_; node != nullptr; node = node->next_) {
       if (node->hash() == hv && node->match(key, len)) {
         return node;
       }
     }
-    return NULL;  
+    return nullptr;  
   }
 
 }  // namespace swarm

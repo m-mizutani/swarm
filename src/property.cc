@@ -46,7 +46,7 @@ namespace swarm {
   // Property
   Property::Property (NetDec * nd) : 
     nd_(nd), 
-    buf_(NULL),
+    buf_(nullptr),
     val_hist_(VAL_HIST_MAX), 
     val_hist_ptr_(0) {
     this->nd_->build_value_vector (&(this->value_));
@@ -95,10 +95,10 @@ namespace swarm {
     this->hashed_ = false;
     this->dir_ = DIR_NIL;
 
-    this->src_port_ = NULL;
-    this->dst_port_ = NULL;
-    this->src_addr_ = NULL;
-    this->dst_addr_ = NULL;
+    this->src_port_ = nullptr;
+    this->dst_port_ = nullptr;
+    this->src_addr_ = nullptr;
+    this->dst_addr_ = nullptr;
   }
   const Value& Property::value(const std::string &key, size_t idx) const {
     const val_id vid = this->nd_->lookup_value_id (key);
@@ -110,7 +110,7 @@ namespace swarm {
     }
 
     size_t p = Property::vid2idx (vid);
-    assert(this->value_[p] != NULL);
+    assert(this->value_[p] != nullptr);
     Value *v = this->value_[p]->get(idx);
     if (v) {
       return *v;
@@ -162,7 +162,7 @@ namespace swarm {
       size_t p = this->ptr_;
       return const_cast<byte_t*>(&(this->buf_[p]));
     } else {
-      return NULL;
+      return nullptr;
     }
   }
 
@@ -266,7 +266,7 @@ namespace swarm {
     }
   }
   const void *Property::ssn_label(size_t *len) const {
-    assert(len != NULL);
+    assert(len != nullptr);
     *len = this->addr_len_ * sizeof(uint32_t);
     return static_cast<const void *>(this->ssn_label_);
   }
@@ -274,7 +274,7 @@ namespace swarm {
   Value * Property::retain (const std::string &value_name) {
     const val_id vid = this->nd_->lookup_value_id (value_name);
     if (vid == VALUE_NULL) {
-      return NULL;
+      return nullptr;
     } else {
       return this->retain (vid);
     }
@@ -286,7 +286,7 @@ namespace swarm {
       Value * v = this->value_[idx]->retain ();
       return v;
     } else {
-      return NULL;
+      return nullptr;
     }
   }
 

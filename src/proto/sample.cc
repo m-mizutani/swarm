@@ -78,7 +78,7 @@ namespace swarm {
       auto sample_hdr = reinterpret_cast <struct sample_header *>
         (p->payload (sizeof (struct sample_header)));
 
-      if (sample_hdr == NULL) {
+      if (sample_hdr == nullptr) {
         return false;
       }
 

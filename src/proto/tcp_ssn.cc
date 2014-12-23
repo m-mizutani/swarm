@@ -400,7 +400,7 @@ namespace swarm {
     ~TcpSsnDecoder() {
       this->ssn_table_->prog(3600);
       TcpSession *ssn;
-      while (NULL != (ssn = dynamic_cast<TcpSession*>(this->ssn_table_->pop()))) {
+      while (nullptr != (ssn = dynamic_cast<TcpSession*>(this->ssn_table_->pop()))) {
         delete ssn;
       }
 
@@ -424,8 +424,8 @@ namespace swarm {
       }
       this->last_ts_ = tv_sec;
       TcpSession *outdated_ssn;
-      while (NULL != (outdated_ssn = 
-                      dynamic_cast<TcpSession*>(this->ssn_table_->pop()))) {
+      while (nullptr != (outdated_ssn = 
+                         dynamic_cast<TcpSession*>(this->ssn_table_->pop()))) {
         if (outdated_ssn->ts() + TIMEOUT < tv_sec) {
           delete outdated_ssn;
         } else {

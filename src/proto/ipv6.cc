@@ -113,13 +113,13 @@ namespace swarm {
         {
           auto opthdr = reinterpret_cast <struct ipv6_option*>
             (p->payload (OCTET_UNIT));
-          if (opthdr == NULL) {
+          if (opthdr == nullptr) {
             return false;
           }
 
           if (opthdr->hdr_len_ > 0) {
             auto optdata = p->payload ((opthdr->hdr_len_) * OCTET_UNIT);
-            if (optdata == NULL) {
+            if (optdata == nullptr) {
               return false;
             }
           }
@@ -140,7 +140,7 @@ namespace swarm {
       auto hdr = reinterpret_cast <struct ipv6_header *>
         (p->payload (hdr_len));
 
-      if (hdr == NULL) {
+      if (hdr == nullptr) {
         return false;
       }
 

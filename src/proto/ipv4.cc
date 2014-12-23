@@ -94,7 +94,7 @@ namespace swarm {
       auto hdr = reinterpret_cast <struct ipv4_header *>
         (p->payload (base_len));
 
-      if (hdr == NULL) {
+      if (hdr == nullptr) {
         return false;
       }
 

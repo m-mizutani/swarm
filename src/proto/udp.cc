@@ -69,7 +69,7 @@ namespace swarm {
       auto hdr = reinterpret_cast <struct udp_header *>
         (p->payload (sizeof (struct udp_header)));
 
-      if (hdr == NULL) {
+      if (hdr == nullptr) {
         return false;
       }
 

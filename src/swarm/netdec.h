@@ -152,7 +152,7 @@ namespace swarm {
     // for modules, not used for external program
     ev_id assign_event (const std::string &name, const std::string &desc);
     val_id assign_value (const std::string &name, const std::string &desc,
-                           ValueFactory *fac = NULL);
+                           ValueFactory *fac = nullptr);
     void decode (dec_id dec, Property *p);
     void build_value_vector (std::vector <ValueSet *> * prm_vec_);
   };

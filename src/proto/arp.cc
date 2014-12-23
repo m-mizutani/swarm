@@ -92,7 +92,7 @@ namespace swarm {
       auto arp_hdr = reinterpret_cast <struct arp_header *>
         (p->payload (sizeof (struct arp_header)));
 
-      if (arp_hdr == NULL) {
+      if (arp_hdr == nullptr) {
         return false;
       }
 
