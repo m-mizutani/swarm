@@ -136,6 +136,7 @@ namespace swarm {
     void *dst_addr (size_t *len) const;
     int src_port () const;
     int dst_port () const;
+    bool has_port () const;
     std::string proto () const;
     uint64_t hash_value () const;
     const void *ssn_label(size_t *len) const;

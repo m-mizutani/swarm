@@ -471,4 +471,24 @@ namespace SkypeIRC {
 
   }
 
+  TEST_F (SkypeIRCFix, has_port) {
+    class PortCount : public Counter {
+    public:
+      explicit PortCount () {}
+      void recv (swarm::ev_id eid, const swarm::Property &p) {
+        if (p.has_port()) {
+          this->countup();
+        }
+      }
+    };
+
+    PortCount *dc = new PortCount();
+    nd->set_handler("ether.packet", dc);
+    for (auto it = test_data.begin (); it != test_data.end (); it++) {
+      PcapData * p = (*it);
+      nd->input (p->pkt_data (), p->len (), *(p->ts ()), p->caplen ());
+    }
+    EXPECT_EQ(2222, dc->count());
+  }
+  
 }  // namespace SkypeIRC

@@ -235,6 +235,9 @@ namespace swarm {
       return 0;
     }
   }
+  bool Property::has_port() const {
+    return (this->src_port_ || this->dst_port_);
+  }
   std::string Property::proto () const {
     static const u_int8_t PROTO_ICMP  = 1;
     static const u_int8_t PROTO_TCP   = 6;
