@@ -32,7 +32,7 @@
 #include <string>
 #include <vector>
 
-#include "./swarm.h"
+#include "../swarm.h"
 #include "./netdec.h"
 #include "./value.h"
 

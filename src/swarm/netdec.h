@@ -32,7 +32,7 @@
 #include <deque>
 #include <string>
 #include "./common.h"
-#include "./swarm.h"
+#include "../swarm.h"
 
 namespace swarm {
   // ----------------------------------------------------------
