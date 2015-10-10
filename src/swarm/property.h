@@ -139,6 +139,8 @@ namespace swarm {
     bool has_port () const;
     std::string proto () const;
     uint64_t hash_value () const;
+    std::string hash_hex () const;
+    static std::string hash_value2hex(uint64_t hv);
     const void *ssn_label(size_t *len) const;
     FlowDir dir() const;
     inline static size_t vid2idx (val_id vid) {
