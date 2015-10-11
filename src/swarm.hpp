@@ -35,11 +35,11 @@
 #include <vector>
 #include <deque>
 
-#include "./swarm/common.h"
-#include "./swarm/property.h"
-#include "./swarm/netdec.h"
-#include "./swarm/netcap.h"
-#include "./swarm/decode.h"
+#include "./swarm/common.hpp"
+#include "./swarm/property.hpp"
+#include "./swarm/netdec.hpp"
+#include "./swarm/netcap.hpp"
+#include "./swarm/decode.hpp"
 
 namespace swarm {
   class NetDec;

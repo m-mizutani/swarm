@@ -26,7 +26,7 @@
 
 #include <string.h>
 #include "./gtest.h"
-#include "../src/swarm/lru-hash.h"
+#include "../src/swarm/lru.hpp"
 
 class TestNode : public swarm::LRUHash::Node {
 private:

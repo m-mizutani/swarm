@@ -28,7 +28,7 @@
 #include "./gtest.h"
 #include <string.h>
 
-#include "../src/swarm.h"
+#include "../src/swarm.hpp"
 
 TEST (Property, basic) {
   swarm::NetDec * nd = new swarm::NetDec ();

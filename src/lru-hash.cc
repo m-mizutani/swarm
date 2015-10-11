@@ -24,8 +24,8 @@ o * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "./swarm/lru-hash.h"
-#include "./debug.h"
+#include "./swarm/lru.hpp"
+#include "./debug.hpp"
 
 namespace swarm {
   LRUHash::LRUHash(size_t timeslot_size, size_t bucket_size) : 

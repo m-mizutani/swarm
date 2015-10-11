@@ -25,9 +25,9 @@
  */
 
 #include <sstream>
-#include "../swarm/decode.h"
-#include "../swarm/lru-hash.h"
-#include "../debug.h"
+#include "../swarm/decode.hpp"
+#include "../swarm/lru.hpp"
+#include "../debug.hpp"
 
 namespace swarm {
   enum TcpStat {

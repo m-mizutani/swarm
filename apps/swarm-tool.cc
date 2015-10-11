@@ -26,7 +26,7 @@
 
 #include <iostream>
 #include <pcap.h>
-#include <swarm.h>
+#include <swarm.hpp>
 #include "./optparse.h"
 
 class GenHandler : public swarm::Handler {

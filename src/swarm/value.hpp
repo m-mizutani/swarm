@@ -33,7 +33,7 @@
 #include <vector>
 #include <string.h>
 
-#include "./common.h"
+#include "./common.hpp"
 
 namespace swarm {
   // -------------------------------------------------------

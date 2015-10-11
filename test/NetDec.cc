@@ -27,7 +27,7 @@
 #include "./gtest.h"
 #include <pcap.h>
 
-#include "../src/swarm.h"
+#include "../src/swarm.hpp"
 
 class Counter  : public swarm::Handler {
  protected:

@@ -29,8 +29,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include "./swarm/value.h"
-#include "./debug.h"
+#include "./swarm/value.hpp"
+#include "./debug.hpp"
 
 namespace swarm {
   const std::string Value::null_("(none)");

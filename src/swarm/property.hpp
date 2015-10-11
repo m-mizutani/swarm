@@ -34,8 +34,8 @@
 #include <vector>
 #include <deque>
 
-#include "./common.h"
-#include "./value.h"
+#include "./common.hpp"
+#include "./value.hpp"
 
 namespace swarm {
   class NetDec;

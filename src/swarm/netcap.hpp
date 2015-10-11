@@ -32,7 +32,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "./common.h"
+#include "./common.hpp"
 
 
 namespace swarm {

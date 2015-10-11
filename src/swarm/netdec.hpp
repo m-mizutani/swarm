@@ -31,8 +31,8 @@
 #include <vector>
 #include <deque>
 #include <string>
-#include "./common.h"
-#include "../swarm.h"
+#include "./common.hpp"
+#include "../swarm.hpp"
 
 namespace swarm {
   // ----------------------------------------------------------

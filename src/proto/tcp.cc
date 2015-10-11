@@ -25,8 +25,8 @@
  */
 
 #include <sstream>
-#include "./debug.h"
-#include "../swarm/decode.h"
+#include "./debug.hpp"
+#include "../swarm/decode.hpp"
 
 
 namespace swarm {

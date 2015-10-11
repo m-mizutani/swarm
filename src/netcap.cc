@@ -52,9 +52,9 @@
 #include <netinet/ether.h>
 #endif  // __linux__
 
-#include "./debug.h"
-#include "./swarm/netcap.h"
-#include "./swarm/netdec.h"
+#include "./debug.hpp"
+#include "./swarm/netcap.hpp"
+#include "./swarm/netdec.hpp"
 
 
 namespace swarm {

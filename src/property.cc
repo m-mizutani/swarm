@@ -30,10 +30,10 @@
 #include <string.h>
 #include <assert.h>
 
-#include "./swarm/property.h"
-#include "./swarm/value.h"
-#include "./swarm/netdec.h"
-#include "./debug.h"
+#include "./swarm/property.hpp"
+#include "./swarm/value.hpp"
+#include "./swarm/netdec.hpp"
+#include "./debug.hpp"
 
 namespace swarm {
   // -------------------------------------------------------

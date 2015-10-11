@@ -28,8 +28,8 @@
 #include <string.h>
 
 #include "./gtest.h"
-#include "../src/debug.h"
-#include "../src/swarm.h"
+#include "../src/debug.hpp"
+#include "../src/swarm.hpp"
 
 namespace SkypeIRC {
   class PcapData {

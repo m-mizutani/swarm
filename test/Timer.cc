@@ -29,8 +29,8 @@
 #include <string.h>
 
 #include "./gtest.h"
-#include "../src/debug.h"
-#include "../src/swarm.h"
+#include "../src/debug.hpp"
+#include "../src/swarm.hpp"
 
 TEST(Timer, set_unset) {
   class Worker : public swarm::Task {

@@ -25,7 +25,7 @@
  */
 
 #include <pcap.h>
-#include <swarm.h>
+#include <swarm.hpp>
 #include "./optparse.h"
 
 class NetDecBench : public swarm::Task {

@@ -25,7 +25,7 @@
  */
 
 
-#include "../swarm/decode.h"
+#include "../swarm/decode.hpp"
 
 #define IP_RF 0x8000            /* reserved fragment flag */
 #define IP_DF 0x4000            /* dont fragment flag */

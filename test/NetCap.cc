@@ -27,7 +27,7 @@
 
 #include "./gtest.h"
 #include <string>
-#include "../src/swarm.h"
+#include "../src/swarm.hpp"
 
 TEST(NetCap, device_name) {
   std::vector<std::string> name_list;

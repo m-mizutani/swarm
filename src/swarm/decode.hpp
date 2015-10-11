@@ -32,9 +32,9 @@
 #include <string>
 #include <vector>
 
-#include "../swarm.h"
-#include "./netdec.h"
-#include "./value.h"
+#include "../swarm.hpp"
+#include "./netdec.hpp"
+#include "./value.hpp"
 
 namespace swarm {
   class Decoder {

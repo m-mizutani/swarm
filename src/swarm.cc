@@ -30,10 +30,10 @@
 #include <arpa/inet.h>
 #include <string.h>
 
-#include "./swarm.h"
-#include "./debug.h"
-#include "./swarm/netdec.h"
-#include "./swarm/netcap.h"
+#include "./swarm.hpp"
+#include "./debug.hpp"
+#include "./swarm/netdec.hpp"
+#include "./swarm/netcap.hpp"
 
 namespace swarm {
   Swarm::Swarm() {

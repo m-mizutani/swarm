@@ -25,7 +25,7 @@
  */
 
 #include <pcap.h>
-#include "../src/swarm.h"
+#include "../src/swarm.hpp"
 #include "./optparse.h"
 
 class CommonHandler : swarm::Handler {

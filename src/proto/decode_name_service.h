@@ -28,7 +28,7 @@
 #define SRC_PROTO_DECODE_NAME_SERVICE_H_
 
 #include <string>
-#include "../swarm/decode.h"
+#include "../swarm/decode.hpp"
 
 namespace swarm {
 
