@@ -24,7 +24,7 @@ o * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "./lru-hash.h"
+#include "./swarm/lru-hash.h"
 #include "./debug.h"
 
 namespace swarm {

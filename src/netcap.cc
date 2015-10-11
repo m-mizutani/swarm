@@ -55,7 +55,6 @@
 #include "./debug.h"
 #include "./swarm/netcap.h"
 #include "./swarm/netdec.h"
-#include "./swarm/timer.h"
 
 
 namespace swarm {
