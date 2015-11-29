@@ -44,6 +44,7 @@ namespace swarm {
     case  6:  // SOA
     case 12:  // PTR
     case 15:  // MX
+    case 33:  // SRV
       {
         size_t len;
         byte_t * ptr = this->ptr(&len);
@@ -381,6 +382,7 @@ namespace swarm {
     case 15: s.assign ("MX"); break;
     case 16: s.assign ("TXT"); break;
     case 28: s.assign ("AAAA"); break;
+    case 33: s.assign("SRV"); break;
     default:
       {
         std::stringstream ss;
