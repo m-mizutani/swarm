@@ -448,6 +448,68 @@ namespace SkypeIRC {
     EXPECT_EQ(18,  dc->dst_size_.at(2));
   }
 
+  TEST_F (SkypeIRCFix, tcp_ssn_stat) {
+    class DataCount : public Counter {
+    public:
+      std::vector<std::string> client_;
+      std::vector<std::string> server_;
+      
+      explicit DataCount () {}
+      void recv (swarm::ev_id eid, const swarm::Property &p) {
+        
+        if (p.src_addr() == "195.215.8.141" || p.dst_addr() == "195.215.8.141") {
+          const swarm::Value& server = p.value("tcp_ssn.server_stat");
+          const swarm::Value& client = p.value("tcp_ssn.client_stat");
+          /*
+          const swarm::Value& to_server = p.value("tcp_ssn.to_server");
+          bool *to_s = reinterpret_cast<bool*>(to_server.ptr());
+          const swarm::Value& flag = p.value("tcp.flags");
+          
+          std::cout << (*to_s ? " -> " : " <- ") <<
+            flag.repr() << " " << client.repr() << " - " << server.repr();
+          std::cout << std::endl;
+          */
+          this->client_.push_back(client.repr());
+          this->server_.push_back(server.repr());
+        }
+      }
+    };
+    
+    DataCount *dc = new DataCount();
+    nd->set_handler("tcp.packet", dc);
+    for (auto it = test_data.begin (); it != test_data.end (); it++) {
+      PcapData * p = (*it);
+      nd->input (p->pkt_data (), p->len (), *(p->ts ()), p->caplen ());
+    }
+    
+    EXPECT_EQ("SYN_SENT", dc->client_[0]);
+    EXPECT_EQ("LISTEN",   dc->server_[0]);
+    
+    EXPECT_EQ("SYN_SENT", dc->client_[1]);
+    EXPECT_EQ("SYN_RCVD", dc->server_[1]);
+    
+    EXPECT_EQ("ESTABLISHED", dc->client_[2]);
+    EXPECT_EQ("SYN_RCVD",    dc->server_[2]);
+
+    EXPECT_EQ("ESTABLISHED", dc->client_[3]);
+    EXPECT_EQ("SYN_RCVD",    dc->server_[3]);
+
+    for (size_t i = 4; i < 14; i++) {
+      EXPECT_EQ("ESTABLISHED", dc->client_[i]);
+      EXPECT_EQ("ESTABLISHED", dc->server_[i]);
+    }
+    
+    EXPECT_EQ("ACTIVE_CLOSING",  dc->client_[14]);
+    EXPECT_EQ("ESTABLISHED", dc->server_[14]);
+    
+    EXPECT_EQ("ACTIVE_CLOSING",  dc->client_[15]);
+    EXPECT_EQ("ACTIVE_CLOSING",  dc->server_[15]);
+
+    EXPECT_EQ("TIME_WAIT",  dc->client_[17]);
+    EXPECT_EQ("TIME_WAIT",  dc->server_[17]);
+
+  }
+
 
   TEST_F (SkypeIRCFix, dns) {
     class DataCount : public Counter {

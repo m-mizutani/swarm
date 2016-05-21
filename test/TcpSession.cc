@@ -88,14 +88,15 @@ namespace tcp_ssn_test {
     EXPECT_EQ(swarm::ESTABLISHED, ssn->client_stat());
     EXPECT_EQ(swarm::ESTABLISHED, ssn->server_stat());
 
-    // Send data (client -> server, L2R)
+    // Send fin (client -> server, L2R)
     EXPECT_TRUE(ssn->update(FIN, seqL + 21, seqR + 11, 20, swarm::DIR_L2R));
-    EXPECT_EQ(swarm::FIN_WAIT_1,  ssn->client_stat());
+    EXPECT_EQ(swarm::ACTIVE_CLOSING,  ssn->client_stat());
     EXPECT_EQ(swarm::ESTABLISHED, ssn->server_stat());
 
+    // Send finack (server -> client, R2L)
     EXPECT_TRUE(ssn->update(ACK, seqR + 11, seqL + 21, 0, swarm::DIR_R2L));
-    EXPECT_EQ(swarm::FIN_WAIT_2, ssn->client_stat());
-    EXPECT_EQ(swarm::CLOSE_WAIT, ssn->server_stat());
+    EXPECT_EQ(swarm::ACTIVE_CLOSING, ssn->client_stat());
+    EXPECT_EQ(swarm::ESTABLISHED,    ssn->server_stat());
 
   }
 }

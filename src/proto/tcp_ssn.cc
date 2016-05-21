@@ -36,12 +36,8 @@ namespace swarm {
     SYN_SENT,
     SYN_RCVD,
     ESTABLISHED,
-    FIN_WAIT_1,
-    FIN_WAIT_2,
+    ACTIVE_CLOSING,
     TIME_WAIT,
-    CLOSING,
-    CLOSE_WAIT,
-    LAST_ACK,
   };
 
   class TcpSession : public LRUHash::Node {
@@ -68,7 +64,10 @@ namespace swarm {
       bool avail_seq_;
       bool avail_ack_;
       TcpStat stat_;
-      bool cf_wait_; // Close/FIN wait candidate
+
+      bool recv_fin_;
+      bool recv_finack_;
+      bool sent_finack_;
       bool updated_;
 
     public:
@@ -79,7 +78,9 @@ namespace swarm {
         avail_seq_(false),
         avail_ack_(false),
         stat_(CLOSED),
-        cf_wait_(false),
+        recv_fin_(false),
+        recv_finack_(false),
+        sent_finack_(false),
         updated_(false) {
       }
       ~Node() {};
@@ -119,32 +120,27 @@ namespace swarm {
           break;
 
         case ESTABLISHED: 
-          if (flags == FIN) {
-            this->cf_wait_ = true;
+          if ((flags & FIN) > 0) {
+            this->recv_fin_ = true;
           }
           break;
 
-        case FIN_WAIT_1:           
-          if (flags == ACK) {
-            this->update_stat(FIN_WAIT_2);
+        case ACTIVE_CLOSING:
+          if ((flags & FIN) > 0) {
+            this->recv_fin_ = true;
           }
-          break;
-
-        case FIN_WAIT_2:
-          if (flags == FIN) {
-            this->cf_wait_ = true;
+            
+          if ((flags & ACK) > 0) {
+            this->recv_finack_ = true;
           }
-          break;
-
-        case TIME_WAIT: break;
-        case CLOSING: 
-          if (flags == ACK) {
+            
+          if (this->recv_fin_ && this->recv_finack_ && this->sent_finack_) {
             this->update_stat(TIME_WAIT);
           }
           break;
-
-        case CLOSE_WAIT: break;
-        case LAST_ACK: break;
+            
+        case TIME_WAIT:
+          break;
         }
 
         if (this->stat_ == ESTABLISHED || this->stat_ == SYN_RCVD) {
@@ -200,48 +196,30 @@ namespace swarm {
 
         case SYN_RCVD: 
           if (flags == FIN) {
-            this->update_stat(FIN_WAIT_1);            
+            this->update_stat(ACTIVE_CLOSING);
           } else {
             this->update_stat(ESTABLISHED);
           }
           break;
 
         case ESTABLISHED:
-          if (flags == FIN) {
-            this->update_stat(FIN_WAIT_1);            
+          if ((flags & FIN) > 0) {
+            this->update_stat(ACTIVE_CLOSING);
           }
-          if (flags == ACK && this->cf_wait_) {
-            this->update_stat(CLOSE_WAIT);
-          }
-          break;
-
-        case FIN_WAIT_1:
-          if (flags == ACK) {
-            this->update_stat(CLOSING);
-          }
-
-          break;
-        
-        case FIN_WAIT_2:
-          if (this->cf_wait_ && flags == ACK) {
-            this->update_stat(TIME_WAIT);
+          if (this->recv_fin_ && (flags & ACK) > 0) {
+            this->sent_finack_ = true;
           }
           break;
 
-        case TIME_WAIT: break;
-        case CLOSING: break;
-
-        case CLOSE_WAIT:
-          if (flags == FIN) {
-            this->update_stat(LAST_ACK);
+        case ACTIVE_CLOSING:
+          if (this->recv_fin_ && (flags & ACK) > 0) {
+            this->sent_finack_ = true;
           }
+          
           break;
 
-        case LAST_ACK: 
-          if (flags == ACK) {
-            this->update_stat(CLOSED);
-          }
-          break;
+        case TIME_WAIT:
+            break; // nothing to do.
         }
 
         if (this->stat_ == ESTABLISHED) {
@@ -378,13 +356,17 @@ namespace swarm {
   class TcpSsnDecoder : public Decoder {
   private:
     ev_id EV_EST_, EV_DATA_;
-    val_id P_SEG_, P_TO_SERVER_;
+    val_id P_SEG_, P_TO_SERVER_, P_SERVER_STAT_, P_CLIENT_STAT_;
+    
+    // In order to lookup TCP header.
     val_id P_TCP_HDR_, P_TCP_SEQ_, P_TCP_ACK_, P_TCP_FLAGS_;
     LRUHash *ssn_table_;
     time_t last_ts_;
     static const time_t TIMEOUT = 300;
 
   public:
+    DEF_REPR_CLASS (VarStat, FacStat);
+
     explicit TcpSsnDecoder (NetDec * nd) : Decoder (nd), last_ts_(0) {
       this->EV_EST_ = nd->assign_event ("tcp_ssn.established",
                                         "TCP session established");
@@ -394,6 +376,12 @@ namespace swarm {
       this->P_SEG_ = nd->assign_value ("tcp_ssn.segment", "TCP segment data");
       this->P_TO_SERVER_ = 
         nd->assign_value ("tcp_ssn.to_server", "Packet to server");
+      this->P_SERVER_STAT_ =
+        nd->assign_value("tcp_ssn.server_stat", "TCP server status",
+                         new FacStat());
+      this->P_CLIENT_STAT_ =
+        nd->assign_value("tcp_ssn.client_stat", "TCP client status",
+                         new FacStat());
 
       this->ssn_table_ = new LRUHash(3600, 0xffff);
     }
@@ -489,7 +477,11 @@ namespace swarm {
         }
       }
 
-
+      TcpStat server = ssn->server_stat();
+      TcpStat client = ssn->client_stat();
+      p->copy(this->P_SERVER_STAT_, &server, sizeof(server));
+      p->copy(this->P_CLIENT_STAT_, &client, sizeof(client));
+      
       // set data to property
       // p->set (this->P_SRC_PORT_, &(hdr->src_port_), sizeof (hdr->src_port_));
 
@@ -501,5 +493,23 @@ namespace swarm {
     }
   };
 
+  std::string TcpSsnDecoder::VarStat::repr () const {
+    std::string str;
+    TcpStat *s = reinterpret_cast<TcpStat*>(this->ptr());
+
+    switch (*s) {
+    case TcpStat::CLOSED: str = "CLOSED"; break;
+    case TcpStat::LISTEN: str = "LISTEN"; break;
+    case TcpStat::SYN_SENT: str = "SYN_SENT"; break;
+    case TcpStat::SYN_RCVD: str = "SYN_RCVD"; break;
+    case TcpStat::ESTABLISHED: str = "ESTABLISHED"; break;
+    case TcpStat::TIME_WAIT: str = "TIME_WAIT"; break;
+    case TcpStat::ACTIVE_CLOSING: str = "ACTIVE_CLOSING"; break;
+    }
+    
+    return str;
+  }
+
+  
   INIT_DECODER (tcp_ssn, TcpSsnDecoder::New);
 }  // namespace swarm
