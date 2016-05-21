@@ -386,19 +386,31 @@ namespace swarm {
     struct pcap_pkthdr *pkthdr;
     const u_char *pkt_data;
     int rc;
+    
+    struct timeval begin_tv, end_tv, sub_tv;
+    gettimeofday(&begin_tv, nullptr);
+    
     // debug(true, "event: %d", revents);
-    for(int i = 0; i < 12; i++) {
-      pkt_data = nullptr;
-      rc = ::pcap_next_ex (this->pcap_, &pkthdr, &pkt_data);
-
-      if (rc == 1 && this->netdec()) {
-        this->netdec()->input (pkt_data, pkthdr->len, pkthdr->ts,
-                               pkthdr->caplen);
-      } else if (rc < 0) {
-        this->ev_loop_exit();
-        return;
-      } else {
-        return;
+    while (true) {
+      for(int i = 0; i < 128; i++) {
+        pkt_data = nullptr;
+        rc = ::pcap_next_ex (this->pcap_, &pkthdr, &pkt_data);
+        
+        if (rc == 1 && this->netdec()) {
+          this->netdec()->input (pkt_data, pkthdr->len, pkthdr->ts,
+                                 pkthdr->caplen);
+        } else if (rc < 0) {
+          this->ev_loop_exit();
+          break;
+        } else {
+          break;
+        }
+      }
+      
+      gettimeofday(&end_tv, nullptr);
+      timersub(&end_tv, &begin_tv, &sub_tv);
+      if (sub_tv.tv_sec > 0 || sub_tv.tv_usec > 1000) {
+        break;
       }
     }
   }
@@ -513,17 +525,16 @@ namespace swarm {
   void CapPcapDev::handler(int revents) {
     int rc;
 
-    struct timeval tv;
-
     for(int i = 0; i < 16; i++) {
       rc = ::recv(this->sock_fd_, this->buffer_, BUFSIZE_, 0);
       if (rc > 0) {
         gettimeofday(&tv, nullptr);
         this->netdec()->input (this->buffer_, rc, tv);
       } else {
-        return;
+        break;
       }
     }
+    
   }
 #endif  // __linux__
 
