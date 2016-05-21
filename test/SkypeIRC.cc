@@ -499,11 +499,11 @@ namespace SkypeIRC {
       EXPECT_EQ("ESTABLISHED", dc->server_[i]);
     }
     
-    EXPECT_EQ("ACTIVE_CLOSING",  dc->client_[14]);
+    EXPECT_EQ("CLOSING",  dc->client_[14]);
     EXPECT_EQ("ESTABLISHED", dc->server_[14]);
     
-    EXPECT_EQ("ACTIVE_CLOSING",  dc->client_[15]);
-    EXPECT_EQ("ACTIVE_CLOSING",  dc->server_[15]);
+    EXPECT_EQ("CLOSING",  dc->client_[15]);
+    EXPECT_EQ("CLOSING",  dc->server_[15]);
 
     EXPECT_EQ("TIME_WAIT",  dc->client_[17]);
     EXPECT_EQ("TIME_WAIT",  dc->server_[17]);

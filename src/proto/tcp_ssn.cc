@@ -36,7 +36,7 @@ namespace swarm {
     SYN_SENT,
     SYN_RCVD,
     ESTABLISHED,
-    ACTIVE_CLOSING,
+    CLOSING,
     TIME_WAIT,
   };
 
@@ -125,7 +125,7 @@ namespace swarm {
           }
           break;
 
-        case ACTIVE_CLOSING:
+        case CLOSING:
           if ((flags & FIN) > 0) {
             this->recv_fin_ = true;
           }
@@ -196,7 +196,7 @@ namespace swarm {
 
         case SYN_RCVD: 
           if (flags == FIN) {
-            this->update_stat(ACTIVE_CLOSING);
+            this->update_stat(CLOSING);
           } else {
             this->update_stat(ESTABLISHED);
           }
@@ -204,14 +204,14 @@ namespace swarm {
 
         case ESTABLISHED:
           if ((flags & FIN) > 0) {
-            this->update_stat(ACTIVE_CLOSING);
+            this->update_stat(CLOSING);
           }
           if (this->recv_fin_ && (flags & ACK) > 0) {
             this->sent_finack_ = true;
           }
           break;
 
-        case ACTIVE_CLOSING:
+        case CLOSING:
           if (this->recv_fin_ && (flags & ACK) > 0) {
             this->sent_finack_ = true;
           }
@@ -504,7 +504,7 @@ namespace swarm {
     case TcpStat::SYN_RCVD: str = "SYN_RCVD"; break;
     case TcpStat::ESTABLISHED: str = "ESTABLISHED"; break;
     case TcpStat::TIME_WAIT: str = "TIME_WAIT"; break;
-    case TcpStat::ACTIVE_CLOSING: str = "ACTIVE_CLOSING"; break;
+    case TcpStat::CLOSING: str = "CLOSING"; break;
     }
     
     return str;
