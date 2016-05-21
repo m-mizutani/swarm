@@ -463,6 +463,7 @@ namespace swarm {
       uint32_t seq = p->value(this->P_TCP_SEQ_).ntoh <uint32_t> ();
       uint32_t ack = p->value(this->P_TCP_ACK_).ntoh <uint32_t> ();
 
+      static const bool DBG = false;
       debug(DBG, "data: %zd", data_len);
 
       if (ssn->update(flags, seq, ack, data_len, p->dir())) {

@@ -32,10 +32,9 @@ namespace swarm {
   std::string NameServiceDecoder::VarNameServiceData::repr() const {
     std::string s;
 
-    size_t r_len;
-    byte_t * r_ptr = this->ptr(&r_len);
+    // size_t r_len;
+    // byte_t * r_ptr = this->ptr(&r_len);
 
-    bool rc = false;
     switch (this->type_) {
     case  1: s = this->ip4(); break;  // A
     case 28: s = this->ip6(); break;  // AAAA
@@ -69,7 +68,7 @@ namespace swarm {
           }
           d_len = *p;
           p += 1;          
-          debug(0, "d_len = %d, p - s (%d)", d_len, p - start_ptr);
+          debug(0, "d_len = %zu, p - s (%ld)", d_len, p - start_ptr);
 
           if (p - start_ptr + d_len > len) {
             break;

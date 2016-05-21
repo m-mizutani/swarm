@@ -78,7 +78,7 @@ TEST(Timer, run_timer) {
   swarm::NetCap *nc = new swarm::CapPcapDev(name_list[0]);
 
   ASSERT_EQ(swarm::NetCap::READY, nc->status());
-  swarm::task_id tid1 = nc->set_periodic_task(w, 0.1);
+  nc->set_periodic_task(w, 0.1);
   nc->start(1.);
   // Periodic task per 0.1 second should be called 10 time in 1 second
   EXPECT_LE(5, w->i_);
