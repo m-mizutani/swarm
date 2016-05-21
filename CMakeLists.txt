@@ -33,7 +33,8 @@ ENDIF()
 
 # Build library
 
-FILE(GLOB BASESRCS "src/*.cc" "src/proto/*.cc")
+FILE(GLOB BASESRCS "src/*.cc" "src/proto/*.cc"
+   	           "src/proto/utils/*.cc" "src/proto/utils/*.hpp")
 FILE(GLOB TESTSRCS "test/*.cc")
 FILE(GLOB HEADERS "src/swarm/*.hpp")
 

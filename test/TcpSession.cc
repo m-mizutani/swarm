@@ -35,12 +35,12 @@ namespace tcp_ssn_test {
 
   static const u_int8_t FIN  = 0x01;
   static const u_int8_t SYN  = 0x02;
-  static const u_int8_t RST  = 0x04;
-  static const u_int8_t PUSH = 0x08;
+  // static const u_int8_t RST  = 0x04;
+  // static const u_int8_t PUSH = 0x08;
   static const u_int8_t ACK  = 0x10;
-  static const u_int8_t URG  = 0x20;
-  static const u_int8_t ECE  = 0x40;
-  static const u_int8_t CWR  = 0x80;
+  // static const u_int8_t URG  = 0x20;
+  // static const u_int8_t ECE  = 0x40;
+  // static const u_int8_t CWR  = 0x80;
 
   TEST (TcpSession, basic) {
     swarm::TcpSession *ssn = new swarm::TcpSession(key.data(), key.length(), 1);

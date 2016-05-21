@@ -26,7 +26,7 @@
 
 
 
-#include "./decode_name_service.h"
+#include "./utils/ns_decoder.hpp"
 
 namespace swarm {
 
