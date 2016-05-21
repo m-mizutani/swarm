@@ -524,7 +524,8 @@ namespace swarm {
   }
   void CapPcapDev::handler(int revents) {
     int rc;
-
+    struct timeval tv;
+    
     for(int i = 0; i < 16; i++) {
       rc = ::recv(this->sock_fd_, this->buffer_, BUFSIZE_, 0);
       if (rc > 0) {
