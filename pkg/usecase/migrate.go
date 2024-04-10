@@ -56,7 +56,7 @@ func (x *UseCase) migrateTable(ctx context.Context, src, dst *model.BigQueryDest
 		return goerr.Wrap(err, "can not merge schema")
 	}
 
-	if bqs.Equal(srcMD.Schema, mergedSchema) {
+	if bqs.Equal(dstMD.Schema, mergedSchema) {
 		utils.CtxLogger(ctx).Info("dst table exists and no need to update schema", "dataset", dst.Dataset, "table", dst.Table)
 		return nil
 	}
