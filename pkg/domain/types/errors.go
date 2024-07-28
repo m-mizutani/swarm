@@ -26,4 +26,7 @@ var (
 	// Normal error
 	ErrBlockingPubSub   = goerr.New("blocking pubsub ack")
 	ErrSchemaNotMatched = goerr.New("schema not matched")
+
+	// State error
+	ErrStateWaitTimeout = goerr.New("state wait timeout")
 )

@@ -75,6 +75,11 @@ func New(uc interfaces.UseCase, options ...Option) *Server {
 					return
 				}
 
+				if errors.Is(err, types.ErrStateWaitTimeout) {
+					http.Error(w, err.Error(), http.StatusTooManyRequests)
+					return
+				}
+
 				utils.HandleError(r.Context(), "failed handle event", err)
 				http.Error(w, err.Error(), http.StatusBadRequest)
 

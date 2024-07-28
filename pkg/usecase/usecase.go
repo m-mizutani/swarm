@@ -25,6 +25,9 @@ type UseCase struct {
 
 	// stateCheckInterval is a duration to check state transition. This is used in WaitState method.
 	stateCheckInterval time.Duration
+
+	// stateWaitTimeout is a duration to wait for state transition. This is used in WaitState method.
+	stateWaitTimeout time.Duration
 }
 
 const (
@@ -36,6 +39,7 @@ const (
 	defaultStateTimeout            = 30 * time.Minute
 	defaultStateTTL                = 7 * 24 * time.Hour
 	defaultStateCheckInterval      = 10 * time.Second
+	defaultStateWaitTimeout        = 2 * time.Minute
 )
 
 func New(clients *infra.Clients, options ...Option) *UseCase {
@@ -49,6 +53,7 @@ func New(clients *infra.Clients, options ...Option) *UseCase {
 		stateTimeout:            defaultStateTimeout,
 		stateTTL:                defaultStateTTL,
 		stateCheckInterval:      defaultStateCheckInterval,
+		stateWaitTimeout:        defaultStateWaitTimeout,
 	}
 
 	for _, option := range options {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/m-mizutani/goerr"
 	"github.com/m-mizutani/swarm/pkg/domain/model"
 	"github.com/m-mizutani/swarm/pkg/domain/types"
 	"github.com/m-mizutani/swarm/pkg/utils"
@@ -48,6 +49,8 @@ func (x *UseCase) WaitState(ctx context.Context, msgType types.MsgType, id strin
 		return nil
 	}
 
+	reqTime := utils.CtxTime(ctx)
+
 	for {
 		state, err := x.clients.Database().GetState(ctx, msgType, id)
 		if err != nil {
@@ -59,6 +62,10 @@ func (x *UseCase) WaitState(ctx context.Context, msgType types.MsgType, id strin
 
 		if utils.CtxTime(ctx).After(expiresAt) {
 			return nil
+		}
+
+		if reqTime.Add(x.stateWaitTimeout).Before(utils.CtxTime(ctx)) {
+			return goerr.Wrap(types.ErrStateWaitTimeout, "State wait timeout").With("msgType", msgType).With("id", id)
 		}
 
 		time.Sleep(x.stateCheckInterval)

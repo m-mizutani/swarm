@@ -60,7 +60,7 @@ func TestMemoryLimit(t *testing.T) {
 
 	var currentMem uint64 = 100
 	readMemMock := func(m *runtime.MemStats) {
-		m.Sys = currentMem
+		m.HeapAlloc = currentMem
 	}
 	srv := server.New(mock, server.WithMemoryLimit(1000), server.WithReadMemStats(readMemMock))
 
